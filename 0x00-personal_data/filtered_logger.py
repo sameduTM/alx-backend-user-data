@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+""" Filtered logger"""
 import logging
 import re
 from typing import List
@@ -18,15 +19,15 @@ def filter_datum(fields: List[str], redaction: str, message: str,
 def get_logger() -> logging.Logger:
     """returns a logging.Logger object"""
     logger = logging.getLogger("user_data")
-    
+
     logger.setLevel(logging.INFO)
-    
+
     console_handler = logging.StreamHandler()
-    
+
     console_handler.setFormatter(RedactingFormatter(PII_FIELDS))
-    
+
     logger.addHandler(console_handler)
-    
+
     return logger
 
 
