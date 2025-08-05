@@ -7,7 +7,7 @@ from typing import List
 PII_FIELDS = ('name', 'email', 'ssn', 'password', 'user_agent')
 
 
-def filter_datum(fields: List, redaction: str, message: str,
+def filter_datum(fields: List[str], redaction: str, message: str,
                  separator: str) -> str:
     """returns the log message obfuscated"""
     pattern = r'(' + '|'.join(re.escape(field) + '='
@@ -37,7 +37,7 @@ class RedactingFormatter(logging.Formatter):
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
     SEPARATOR = ";"
 
-    def __init__(self, fields):
+    def __init__(self, fields: List[str]):
         super(RedactingFormatter, self).__init__(self.FORMAT)
         self.fields = fields
 
