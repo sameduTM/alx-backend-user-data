@@ -1,30 +1,45 @@
-#!/usr/bin/env python3
-"""Regex-ing"""
-import re
-import typing
 import logging
+import re
+from typing import List
 
-def filter_datum(fields: typing.List[str], redaction: str, message: str,
+
+PII_FIELDS = ('name', 'email', 'ssn', 'password', 'user_agent')
+
+
+def filter_datum(fields: List, redaction: str, message: str,
                  separator: str) -> str:
-    """Returns log message with specified fields redacted."""
-    pattern = f"({'|'.join(fields)})=.*?(?={separator}|$)"
-    return re.sub(pattern, lambda m: f"{m.group(1)}={redaction}", message)
+    """returns the log message obfuscated"""
+    pattern = r'(' + '|'.join(re.escape(field) + '='
+                              for field in fields) + r')[^;]*'
+    return re.sub(pattern, f"\\1{redaction}", message)
+
+
+def get_logger() -> logging.Logger:
+    """returns a logging.Logger object"""
+    logger = logging.getLogger("user_data")
+    
+    logger.setLevel(logging.INFO)
+    
+    console_handler = logging.StreamHandler()
+    
+    console_handler.setFormatter(RedactingFormatter(PII_FIELDS))
+    
+    logger.addHandler(console_handler)
+    
+    return logger
+
 
 class RedactingFormatter(logging.Formatter):
     """ Redacting Formatter class
         """
-
     REDACTION = "***"
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
     SEPARATOR = ";"
 
-    def __init__(self, fields: typing.List):
+    def __init__(self, fields):
         super(RedactingFormatter, self).__init__(self.FORMAT)
         self.fields = fields
 
     def format(self, record: logging.LogRecord) -> str:
-        """Log formatter"""
-        original_message = super().format(record)
-        redacted = filter_datum(
-            self.fields, self.REDACTION, original_message, self.SEPARATOR)
-        return redacted
+        return filter_datum(self.fields, self.REDACTION,
+                            super().format(record), self.SEPARATOR)
