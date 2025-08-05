@@ -4,10 +4,7 @@ import logging
 import os
 import mysql.connector
 import re
-from mysql.connector.connection import MySQLConnection
-from mysql.connector.pooling import PooledMySQLConnection
-from mysql.connector.abstracts import MySQLConnectionAbstract
-from typing import List, Union
+from typing import List
 
 
 PII_FIELDS = ('name', 'email', 'ssn', 'password', 'phone')
@@ -37,6 +34,7 @@ def get_logger() -> logging.Logger:
 
     return logger
 
+
 def get_db() -> mysql.connector.connection.MySQLConnection:
     """returns a connector to a database"""
     connector = mysql.connector.connect(
@@ -45,7 +43,7 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
         password=os.getenv("PERSONAL_DATA_DB_PASSWORD", ""),
         database=os.getenv("PERSONAL_DATA_DB_NAME")
     )
-    return connector
+    return connector # type: ignore
 
 
 class RedactingFormatter(logging.Formatter):
