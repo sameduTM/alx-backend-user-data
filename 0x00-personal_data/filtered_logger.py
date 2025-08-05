@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """ Filtered logger"""
 import logging
+import os
+import mysql.connector
 import re
 from typing import List
 
@@ -31,6 +33,17 @@ def get_logger() -> logging.Logger:
     logger.propagate = False
 
     return logger
+
+def get_db():
+    """returns a connector to a database"""
+    connector = mysql.connector.connect(
+        host=os.getenv("PERSONAL_DATA_DB_HOST", "localhost"),
+        user=os.getenv("PERSONAL_DATA_DB_USER", "root"),
+        password=os.getenv("PERSONAL_DATA_DB_PASSWORD", ""),
+        database=os.getenv("PERSONAL_DATA_DB_NAME")
+    )
+
+    return connector
 
 
 class RedactingFormatter(logging.Formatter):
