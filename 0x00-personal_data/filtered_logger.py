@@ -24,7 +24,7 @@ def get_logger() -> logging.Logger:
 
     console_handler = logging.StreamHandler()
 
-    console_handler.setFormatter(RedactingFormatter(PII_FIELDS))
+    console_handler.setFormatter(RedactingFormatter(list(PII_FIELDS)))
 
     logger.addHandler(console_handler)
 
