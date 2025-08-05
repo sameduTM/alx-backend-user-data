@@ -28,7 +28,7 @@ def get_logger() -> logging.Logger:
 
     logger.addHandler(console_handler)
 
-    logger.propagate = True
+    logger.propagate = False
 
     return logger
 
