@@ -28,6 +28,8 @@ def get_logger() -> logging.Logger:
 
     logger.addHandler(console_handler)
 
+    logger.propagate = True
+
     return logger
 
 
