@@ -43,7 +43,7 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
         password=os.getenv("PERSONAL_DATA_DB_PASSWORD", ""),
         database=os.getenv("PERSONAL_DATA_DB_NAME")
     )
-    return connector # type: ignore
+    return connector  # type: ignore
 
 
 class RedactingFormatter(logging.Formatter):
