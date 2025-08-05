@@ -4,7 +4,10 @@ import logging
 import os
 import mysql.connector
 import re
-from typing import List
+from mysql.connector.connection import MySQLConnection
+from mysql.connector.pooling import PooledMySQLConnection
+from mysql.connector.abstracts import MySQLConnectionAbstract
+from typing import List, Union
 
 
 PII_FIELDS = ('name', 'email', 'ssn', 'password', 'phone')
@@ -34,7 +37,7 @@ def get_logger() -> logging.Logger:
 
     return logger
 
-def get_db():
+def get_db() -> Union[MySQLConnection, PooledMySQLConnection, MySQLConnectionAbstract]:
     """returns a connector to a database"""
     connector = mysql.connector.connect(
         host=os.getenv("PERSONAL_DATA_DB_HOST", "localhost"),
@@ -42,7 +45,6 @@ def get_db():
         password=os.getenv("PERSONAL_DATA_DB_PASSWORD", ""),
         database=os.getenv("PERSONAL_DATA_DB_NAME")
     )
-
     return connector
 
 
