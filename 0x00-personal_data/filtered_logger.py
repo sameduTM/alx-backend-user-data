@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
 """ Filtered logger"""
-import bcrypt
 import logging
 import os
 import mysql.connector
 import re
 from mysql.connector import MySQLConnection
-from typing import List, ByteString
-
 
 PII_FIELDS = ('name', 'email', 'ssn', 'password', 'phone')
 
