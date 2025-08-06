@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """ Filtered logger"""
+import bcrypt
 import logging
 import os
 import mysql.connector
 import re
 from mysql.connector import MySQLConnection
-from typing import List
+from typing import List, ByteString
 
 
 PII_FIELDS = ('name', 'email', 'ssn', 'password', 'phone')
@@ -72,7 +73,7 @@ def main():
     cursor = db.cursor()
     cursor.execute("SELECT * FROM users;")
     # field names (column names)
-    field_names = [i[0] for i in cursor.description]
+    field_names = [i[0] for i in cursor.description]  # type: ignore
     rows = cursor.fetchall()
     message = ''
     for row in rows:
