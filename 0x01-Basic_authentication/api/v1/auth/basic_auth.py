@@ -2,7 +2,6 @@
 """ Basic auth - inherits from Auth"""
 from api.v1.auth.auth import Auth
 from models.user import User
-from models.base import DATA
 from typing import TypeVar
 import base64
 
