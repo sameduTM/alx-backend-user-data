@@ -16,6 +16,9 @@ class Auth:
         if not excluded_paths or excluded_paths is None:
             return True
         for ex_path in excluded_paths:
+            if ex_path.__contains__('*'):
+                ex_path = ex_path.replace('*', '.*')
+                print(ex_path)
             if re.match(ex_path, path):
                 return False
         return True
