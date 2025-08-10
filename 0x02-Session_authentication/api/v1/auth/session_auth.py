@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """ Session Authentication module"""
 from api.v1.auth.auth import Auth
+from flask import jsonify
 from uuid import uuid4
 
 
@@ -36,3 +37,20 @@ class SessionAuth(Auth):
         user = User.get(user_id)
 
         return user
+
+    def destroy_session(self, request=None):
+        """deletes the user session/logout"""
+        from models.user import User
+        if request is None:
+            return False
+        if not self.session_cookie(request):
+            return False
+        session_id = str(self.session_cookie(request))
+        if session_id:
+            user_id = self.user_id_for_session_id(session_id)
+            if not user_id:
+                return False
+            user = User.get(user_id)
+            user_dict = jsonify(user.to_json())
+            user_dict.set_cookie(session_id, '', expires=0)
+            return True
