@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """ manage API authentication"""
 from typing import List, TypeVar
+import os
 import re
 
 
@@ -32,8 +33,17 @@ class Auth:
             return None
         return request.headers.get('Authorization')
 
-    def current_user(self, request=None) -> TypeVar('User'):
+    def current_user(self, request=None) -> TypeVar('User'):  # type: ignore
         """ public method
             Return: None
         """
         return None
+
+    def session_cookie(self, request=None):
+        """returns a cookie value from a request"""
+        if request is None:
+            return None
+        if os.getenv("SESSION_NAME") == "_my_session_id":
+            cookie_value = request.cookies.get("_my_session_id")
+
+            return cookie_value
