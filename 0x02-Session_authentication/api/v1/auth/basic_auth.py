@@ -15,12 +15,11 @@ class BasicAuth(Auth):
         """
         if authorization_header is None:
             return None
-        if authorization_header is not None:
-            if not isinstance(authorization_header, str):
-                return None
-            if not authorization_header.startswith('Basic '):
-                return None
-            return authorization_header.split('Basic ')[1]
+        if not isinstance(authorization_header, str):
+            return None
+        if not authorization_header.startswith('Basic '):
+            return None
+        return authorization_header.split('Basic ')[1]
 
     def decode_base64_authorization_header(
             self, base64_authorization_header: str) -> str:
@@ -64,7 +63,7 @@ class BasicAuth(Auth):
         except Exception:
             return None
 
-    def current_user(self, request=None) -> TypeVar('User'):
+    def current_user(self, request=None) -> TypeVar('User'):  # type: ignore
         """ Overloads Auth and retrieves the User instance for a request"""
         auth_header = Auth.authorization_header(self, request)
 

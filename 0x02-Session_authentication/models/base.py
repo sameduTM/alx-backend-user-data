@@ -35,7 +35,7 @@ class Base():
         else:
             self.updated_at = datetime.utcnow()
 
-    def __eq__(self, other: TypeVar('Base')) -> bool:  # type: ignore
+    def __eq__(self, other: TypeVar('Base')) -> bool:
         """ Equality
         """
         if type(self) != type(other):
@@ -109,21 +109,20 @@ class Base():
         return len(DATA[s_class].keys())
 
     @classmethod
-    def all(cls) -> Iterable[TypeVar('Base')]:  # type: ignore
+    def all(cls) -> Iterable[TypeVar('Base')]:
         """ Return all objects
         """
         return cls.search()
 
     @classmethod
-    def get(cls, id: str) -> TypeVar('Base'):  # type: ignore
+    def get(cls, id: str) -> TypeVar('Base'):
         """ Return one object by ID
         """
         s_class = cls.__name__
         return DATA[s_class].get(id)
 
     @classmethod
-    def search(cls,
-        attributes: dict = {}) -> List[TypeVar('Base')]:  # type: ignore
+    def search(cls, attributes: dict = {}) -> List[TypeVar('Base')]:
         """ Search all objects with matching attributes
         """
         s_class = cls.__name__

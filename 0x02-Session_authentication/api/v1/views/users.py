@@ -30,12 +30,10 @@ def view_one_user(user_id: str = None) -> str:  # type: ignore
     if user_id == "me" and request.current_user is None:
         abort(404)
     if user_id == "me" and request.current_user is not None:
-        return request.current_user.to_json()  # type: ignore
-    user = User.get(user_id)
-    if user is None:
-        abort(404)
-    user = User.get(user_id)
-    return jsonify(user.to_json())
+        user = User.get(request.current_user.id)
+        if user is None:
+            abort(404)
+        return jsonify(user.to_json())
 
 
 @app_views.route('/users/<user_id>', methods=['DELETE'], strict_slashes=False)
@@ -71,26 +69,24 @@ def create_user() -> str:
     rj = None
     error_msg = None
     try:
-        rj = request.get_json()  # type: ignore
+        rj = request.get_json()
     except Exception:
         rj = None
     if rj is None:
         error_msg = "Wrong format"
-    if rj is not None:
-        if error_msg is None and rj.get("email", "") == "":
-            error_msg = "email missing"
-        if error_msg is None and rj.get("password", "") == "":
-            error_msg = "password missing"
+    if error_msg is None and rj.get("email", "") == "":
+        error_msg = "email missing"
+    if error_msg is None and rj.get("password", "") == "":
+        error_msg = "password missing"
     if error_msg is None:
         try:
-            if rj is not None:
-                user = User()
-                user.email = rj.get("email")
-                user.password = rj.get("password")
-                user.first_name = rj.get("first_name")
-                user.last_name = rj.get("last_name")
-                user.save()
-                return jsonify(user.to_json()), 201  # type: ignore
+            user = User()
+            user.email = rj.get("email")
+            user.password = rj.get("password")
+            user.first_name = rj.get("first_name")
+            user.last_name = rj.get("last_name")
+            user.save()
+            return jsonify(user.to_json()), 201  # type: ignore
         except Exception as e:
             error_msg = "Can't create User: {}".format(e)
     return jsonify({'error': error_msg}), 400  # type: ignore
@@ -116,7 +112,7 @@ def update_user(user_id: str = None) -> str:  # type: ignore
         abort(404)
     rj = None
     try:
-        rj = request.get_json()  # type: ignore
+        rj = request.get_json()
     except Exception:
         rj = None
     if rj is None:
