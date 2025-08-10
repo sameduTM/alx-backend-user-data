@@ -28,12 +28,12 @@ class Auth:
             Return: None
         """
         if request is None:
-            return None
+            return None  # type: ignore
         if 'Authorization' not in request.headers:
-            return None
+            return None  # type: ignore
         return request.headers.get('Authorization')
 
-    def current_user(self, request=None) -> TypeVar('User'):
+    def current_user(self, request=None) -> TypeVar('User'):  # type: ignore
         """ public method
             Return: None
         """
