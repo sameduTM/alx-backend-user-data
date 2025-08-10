@@ -43,6 +43,7 @@ class Auth:
         """returns a cookie value from a request"""
         if request is None:
             return None
-        cookie_value = request.cookies.get("_my_session_id")
+        cookie_name = os.getenv("SESSION_NAME")
+        cookie_value = request.cookies.get(cookie_name)
 
         return cookie_value
