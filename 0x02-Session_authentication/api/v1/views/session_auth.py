@@ -11,8 +11,8 @@ from os import getenv
 def session_login():
     """session login"""
     from api.v1.app import auth
-    email = request.form.get('email')
-    password = request.form.get('password')
+    email = request.form.get('email')  # type:  ignore
+    password = request.form.get('password')  # type:  ignore
     if not email:
         return jsonify({"error": "email missing"}), 400
     if not password:

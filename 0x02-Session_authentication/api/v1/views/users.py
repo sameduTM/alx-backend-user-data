@@ -30,7 +30,7 @@ def view_one_user(user_id: str = None) -> str:  # type: ignore
     if user_id == "me" and request.current_user is None:
         abort(404)
     if user_id == "me" and request.current_user is not None:
-        user = User.get(request.current_user.id)
+        user = User.get(request.current_user.id)  # type:  ignore
         if user is None:
             abort(404)
         return jsonify(user.to_json())
@@ -69,22 +69,22 @@ def create_user() -> str:
     rj = None
     error_msg = None
     try:
-        rj = request.get_json()
+        rj = request.get_json()  # type:  ignore
     except Exception:
         rj = None
     if rj is None:
         error_msg = "Wrong format"
-    if error_msg is None and rj.get("email", "") == "":
+    if error_msg is None and rj.get("email", "") == "":  # type:  ignore
         error_msg = "email missing"
-    if error_msg is None and rj.get("password", "") == "":
+    if error_msg is None and rj.get("password", "") == "":  # type:  ignore
         error_msg = "password missing"
     if error_msg is None:
         try:
             user = User()
-            user.email = rj.get("email")
-            user.password = rj.get("password")
-            user.first_name = rj.get("first_name")
-            user.last_name = rj.get("last_name")
+            user.email = rj.get("email")  # type:  ignore
+            user.password = rj.get("password")  # type:  ignore
+            user.first_name = rj.get("first_name")  # type:  ignore
+            user.last_name = rj.get("last_name")  # type:  ignore
             user.save()
             return jsonify(user.to_json()), 201  # type: ignore
         except Exception as e:
@@ -112,7 +112,7 @@ def update_user(user_id: str = None) -> str:  # type: ignore
         abort(404)
     rj = None
     try:
-        rj = request.get_json()
+        rj = request.get_json()  # type:  ignore
     except Exception:
         rj = None
     if rj is None:
