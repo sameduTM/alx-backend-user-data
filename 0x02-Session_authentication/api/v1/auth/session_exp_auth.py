@@ -10,10 +10,10 @@ class SessionExpAuth(SessionAuth):
 
     def __init__(self) -> None:
         """Instantiation method"""
-        session_duration = os.getenv("SESSION_DURATION")
-        if session_duration:
+        session_duration = 0
+        if os.getenv("SESSION_DURATION"):
             try:
-                session_duration = int(session_duration)
+                session_duration = os.getenv("SESSION_DURATION")
             except ValueError:
                 session_duration = 0
         self.session_duration = session_duration
