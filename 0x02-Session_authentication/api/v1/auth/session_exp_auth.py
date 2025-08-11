@@ -10,13 +10,10 @@ class SessionExpAuth(SessionAuth):
 
     def __init__(self) -> None:
         """Instantiation method"""
-        session_duration = 0
-        if os.getenv("SESSION_DURATION"):
-            try:
-                session_duration = os.getenv("SESSION_DURATION")
-            except ValueError:
-                session_duration = 0
-        self.session_duration = session_duration
+        try:
+            self.session_duration = int(os.getenv("SESSION_DURATION"))
+        except Exception:
+            self.session_duration = 0
 
     def create_session(self, user_id: str = None) -> str:  # type: ignore
         """create session ID"""
@@ -45,7 +42,6 @@ class SessionExpAuth(SessionAuth):
         created_at = self.user_id_by_session_id[session_id]["created_at"]
         if created_at + timedelta(
                 seconds=self.session_duration) < datetime.now(  # type:  ignore
-
-                ):
+        ):
             return None  # type:  ignore
         return self.user_id_by_session_id[session_id]["user_id"]
