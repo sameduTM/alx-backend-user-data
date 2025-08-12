@@ -43,6 +43,7 @@ class SessionDBAuth(SessionExpAuth):
         return None  # type: ignore
 
     def destroy_session(self, request=None) -> bool:
+        """delete session"""
         from models.user_session import UserSession
         if request is None:
             return False
