@@ -29,24 +29,29 @@ class SessionDBAuth(SessionExpAuth):
             based on session_id
         """
         from models.user_session import UserSession
-        UserSession.load_from_file()
-        all_objects = [obj.to_json() for obj in UserSession.all()]
-        if session_id:
-            user_id = None
-            for _obj in all_objects:
-                if _obj["session_id"] == session_id:
-                    user_id = _obj["user_id"]
-            return user_id  # type: ignore
-
-    def destroy_session(self, request=None) -> bool:  # type: ignore
-        """that destroys the UserSession based on the Session ID from the
-           request cookie
-        """
-        from models.user_session import UserSession
-        UserSession.load_from_file()
+        if session_id is None:
+            return None
         all_objects = [obj for obj in UserSession.all()]
-        if request:
-            session_id = request.cookies.get("_my_session_id")
-            for obj in all_objects:
-                if obj.to_json()["session_id"] == session_id:
-                    obj.remove()
+        for obj in all_objects:
+            if obj.session_id == session_id:
+                # Check for expiration using parent logic
+                user_id = super().user_id_for_session_id(session_id)
+                if user_id is None:
+                    obj.remove()  # Session expired, remove from DB
+                    return None  # type: ignore
+                return obj.user_id
+        return None  # type: ignore
+
+    def destroy_session(self, request=None) -> bool:
+        from models.user_session import UserSession
+        if request is None:
+            return False
+        session_id = request.cookies.get("_my_session_id")
+        if not session_id:
+            return False
+        all_objects = [obj for obj in UserSession.all()]
+        for obj in all_objects:
+            if obj.to_json().get("session_id") == session_id:
+                obj.remove()
+                return True
+        return False
