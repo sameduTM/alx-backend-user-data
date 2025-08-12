@@ -2,6 +2,8 @@
 """authentication model"""
 from api.v1.auth.session_exp_auth import SessionExpAuth
 from flask import abort
+from datetime import datetime, timedelta
+from os import getenv
 
 
 class SessionDBAuth(SessionExpAuth):
@@ -31,16 +33,34 @@ class SessionDBAuth(SessionExpAuth):
         from models.user_session import UserSession
         if session_id is None:
             return None
-        all_objects = [obj for obj in UserSession.all()]
+        try:
+            all_objects = [obj for obj in UserSession.all()]
+        except KeyError:
+            return None
         for obj in all_objects:
             if obj.session_id == session_id:
-                # Check for expiration using parent logic
-                user_id = super().user_id_for_session_id(session_id)
-                if user_id is None:
+                # Check for expiration
+                session_duration = getenv("SESSION_DURATION")
+                if session_duration is not None:
+                    try:
+                        session_duration = int(session_duration)
+                    except Exception:
+                        session_duration = 0
+                else:
+                    session_duration = 0
+                if session_duration <= 0:
+                    return obj.user_id
+                created_at = getattr(obj, "created_at", None)
+                if created_at is None:
+                    return None
+                if isinstance(created_at, str):
+                    created_at = datetime.fromisoformat(created_at)
+                now = datetime.now()
+                if created_at + timedelta(seconds=session_duration) < now:
                     obj.remove()  # Session expired, remove from DB
-                    return None  # type: ignore
+                    return None
                 return obj.user_id
-        return None  # type: ignore
+        return None
 
     def destroy_session(self, request=None) -> bool:
         """delete session"""
