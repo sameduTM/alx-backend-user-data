@@ -11,8 +11,10 @@ from os import getenv
 def session_login():
     """session login"""
     from api.v1.app import auth
+
     email = request.form.get('email')  # type:  ignore
     password = request.form.get('password')  # type:  ignore
+
     if not email:
         return jsonify({"error": "email missing"}), 400
     if not password:
@@ -22,6 +24,7 @@ def session_login():
         return jsonify({"error": "no user found for this email"}), 404
     if not User.is_valid_password(user[0], password):
         return jsonify({"error": "wrong password"}), 401
+
     session_id = auth.create_session(user[0].id)
     user_object = jsonify(user[0].to_json())
     cookie_name = str(getenv("SESSION_NAME"))
@@ -35,6 +38,7 @@ def session_login():
 def session_logout():
     """logout session"""
     from api.v1.app import auth
+
     try:
         auth.destroy_session(request)
         return jsonify({}), 200
