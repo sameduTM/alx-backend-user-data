@@ -2,6 +2,7 @@
 """Hash password module"""
 from db import DB
 from sqlalchemy.orm.exc import NoResultFound
+from uuid import uuid4
 from user import User
 import bcrypt
 
@@ -40,3 +41,8 @@ class Auth:
             return False
         except Exception:
             return False
+
+    def _generate_uuid(self) -> str:
+        """return a string representation of a new UUID"""
+        new_uuid = str(uuid4())
+        return new_uuid
