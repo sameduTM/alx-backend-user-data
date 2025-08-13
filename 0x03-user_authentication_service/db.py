@@ -52,5 +52,7 @@ class DB:
     def update_user(self, user_id: int, **kwargs) -> None:
         """update user's attribute as passed and commit to db"""
         for key, value in kwargs.items():
-            self._session.query(User).filter(User.id == user_id).update({key: value})
+            self._session.query(
+                User).filter(
+                    User.id == user_id).update({key: value})  # type: ignore
         self._session.commit()
