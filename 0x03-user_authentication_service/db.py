@@ -39,15 +39,12 @@ class DB:
 
         return user
 
-    def find_user_by(self, **kwargs) -> str:
+    def find_user_by(self, **kwargs) -> User:
         """returns the first row found in the users table as filtered by
            the methods input arguments
         """
-        try:
-            result = self._session.query(
-                User).filter_by(**kwargs).first()  # type: ignore
-            if result is None:
-                raise NoResultFound
-            return result
-        except NoResultFound:
+        result = self._session.query(
+            User).filter_by(**kwargs).first()  # type: ignore
+        if result is None:
             raise NoResultFound
+        return result
