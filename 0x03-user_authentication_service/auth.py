@@ -8,7 +8,7 @@ import bcrypt
 
 def _hash_password(password: str) -> bytes:
     """takes in a password string arguments and returns bytes."""
-    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt())
 
 
 class Auth:
@@ -26,5 +26,17 @@ class Auth:
             if user_check:
                 raise ValueError(f"User {email} already exists")
         except NoResultFound:
-            user = self._db.add_user(email, hashed_pwd.decode('utf-8'))
+            user = self._db.add_user(email, hashed_pwd.decode())
             return user
+
+    def valid_login(self, email: str, password: str) -> bool:
+        """validate credentials"""
+        try:
+            user_check = self._db.find_user_by(email=email)
+            if user_check:
+                hashed_password = user_check.hashed_password
+                if bcrypt.checkpw(password.encode(), hashed_password.encode()):
+                    return True
+            return False
+        except Exception:
+            return False
