@@ -16,10 +16,8 @@ def index():
 @app.route('/users', methods=['POST'], strict_slashes=False)
 def register_user():
     """Register user"""
-    data = request.get_data().decode('utf-8')
-    credentials = data.split('&')
-    email = credentials[0].split('=')[1]
-    password = credentials[1].split('=')[1]
+    email = str(request.form.get('email'))
+    password = str(request.form.get('password'))
     try:
         AUTH.register_user(email, password)
         return jsonify({"email": email, "message": "user created"})
@@ -30,13 +28,11 @@ def register_user():
 @app.route('/sessions', methods=['POST'], strict_slashes=False)
 def login():
     """function to respond to the POST /sessions route."""
-    data = request.get_data().decode()
-    credentials = data.split('&')
-    email = credentials[0].split('=')[1]
-    password = credentials[1].split('=')[1]
-    if not AUTH.valid_login(email, password):
+    email = request.form.get('email')
+    password = request.form.get('password')
+    if not AUTH.valid_login(str(email), str(password)):
         abort(401)
-    session_id = AUTH.create_session(email)
+    session_id = AUTH.create_session(str(email))
     response = jsonify({"email": email, "message": "logged in"})
     response.set_cookie(session_id)
 
