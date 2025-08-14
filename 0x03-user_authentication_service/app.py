@@ -26,7 +26,7 @@ def register_user():
         return jsonify({"message": "email already registered"}), 400
 
 
-@app.route('/sessions', methods=["POST"], strict_slashes=False)
+@app.route('/sessions', methods=["GET"], strict_slashes=False)
 def login():
     """function to respond to the POST /sessions route."""
     email = request.form.get('email')
@@ -40,7 +40,7 @@ def login():
     return response
 
 
-@app.route('/sessions', methods=["DELETE"], strict_slashes=False)
+@app.route('/sessions', methods=["DELETE", "POST"], strict_slashes=False)
 def logout():
     """Log out"""
     session_id = str(request.cookies.get("session_id"))
@@ -76,7 +76,7 @@ def reset_password():
         abort(403)
 
 
-@app.route('/reset_password', methods=["PUT", "POST"], strict_slashes=False)
+@app.route('/update_password', methods=["PUT"], strict_slashes=False)
 def update_password():
     """update password"""
     email = str(request.form.get('email'))
