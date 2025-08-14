@@ -47,11 +47,15 @@ def login():
 def logout():
     """Log out"""
     session_id = str(request.cookies.get("session_id"))
-    user = AUTH.get_user_from_session_id(session_id)
-    if user:
-        AUTH.destroy_session(user.id)
-        return redirect('/')
-    return make_response(403)
+    print(session_id)
+    try:
+        user = AUTH.get_user_from_session_id(session_id)
+        if user:
+            AUTH.destroy_session(user.id)
+            return redirect('/', 302)
+        abort(403)
+    except Exception:
+        abort(403)
 
 
 if __name__ == "__main__":
