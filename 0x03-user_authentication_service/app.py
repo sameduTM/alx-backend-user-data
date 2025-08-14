@@ -4,16 +4,17 @@ from auth import Auth
 from flask import Flask, jsonify, request, abort, make_response, redirect
 
 app = Flask(__name__)
+
 AUTH = Auth()
 
 
-@app.route('/')
+@app.route('/', methods=["GET"], strict_slashes=False)
 def index():
     """default route"""
     return jsonify({"message": "Bienvenue"})
 
 
-@app.route('/users', methods=['POST'], strict_slashes=False)
+@app.route('/users', methods=["POST"], strict_slashes=False)
 def register_user():
     """Register user"""
     email = str(request.form.get('email'))
@@ -25,7 +26,7 @@ def register_user():
         return jsonify({"message": "email already registered"}), 400
 
 
-@app.route('/sessions', methods=['POST'], strict_slashes=False)
+@app.route('/sessions', methods=["POST"], strict_slashes=False)
 def login():
     """function to respond to the POST /sessions route."""
     email = request.form.get('email')
@@ -39,7 +40,7 @@ def login():
     return response
 
 
-@app.route('/sessions', methods=['DELETE'], strict_slashes=False)
+@app.route('/sessions', methods=["DELETE"], strict_slashes=False)
 def logout():
     """Log out"""
     session_id = str(request.cookies.get("session_id"))
@@ -51,7 +52,7 @@ def logout():
     abort(403)
 
 
-@app.route('/profile', methods=['GET'], strict_slashes=False)
+@app.route('/profile', methods=["GET"], strict_slashes=False)
 def profile():
     """function to respond to the GET /profile route"""
     session_id = str(request.cookies.get('session_id'))
@@ -62,7 +63,7 @@ def profile():
     abort(403)
 
 
-@app.route('/reset_password', methods=['POST'], strict_slashes=False)
+@app.route('/reset_password', methods=["POST"], strict_slashes=False)
 def reset_password():
     """reset password"""
     email = str(request.form.get('email'))
@@ -75,7 +76,7 @@ def reset_password():
         abort(403)
 
 
-@app.route('/update_password', methods=['PUT'], strict_slashes=False)
+@app.route('/reset_password', methods=["PUT"], strict_slashes=False)
 def update_password():
     """update password"""
     email = str(request.form.get('email'))
