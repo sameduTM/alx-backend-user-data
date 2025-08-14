@@ -85,7 +85,7 @@ def update_password():
         if AUTH.update_password(reset_token, new_password) is None:
             return jsonify({"email": email, "message": "Password updated"})
         abort(403)
-    except Exception:
+    except ValueError:
         abort(403)
 
 
