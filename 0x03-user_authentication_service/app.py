@@ -29,8 +29,10 @@ def register_user():
 def login():
     """function to respond to the POST /sessions route."""
     data = request.get_data().decode()
-    email, password = data.split('&')
-    if not AUTH.valid_login(email.split('=')[1], password.split('=')[1]):
+    credentials = data.split('&')
+    email = credentials[0].split('=')[1]
+    password = credentials[1].split('=')[1]
+    if not AUTH.valid_login(email, password):
         abort(401)
     AUTH.create_session(email)
     return jsonify({"email": email, "message": "logged in"})

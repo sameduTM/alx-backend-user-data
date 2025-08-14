@@ -57,6 +57,6 @@ class DB:
                     User).filter(
                         User.id == user_id) \
                     .update({key: value})  # type: ignore
+            self._session.commit()
         except Exception:
             raise ValueError
-        self._session.commit()
