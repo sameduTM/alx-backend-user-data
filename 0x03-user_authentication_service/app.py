@@ -19,7 +19,7 @@ def register_user():
     data = request.get_data().decode('utf-8')
     email, password = data.split('&')
     try:
-        AUTH.register_user(email, password)
+        AUTH.register_user(email.split('=')[1], password.split('=')[1])
         return jsonify({"email": email, "message": "user created"})
     except Exception:
         return jsonify({"message": "email already registered"}), 400
@@ -30,7 +30,7 @@ def login():
     """function to respond to the POST /sessions route."""
     data = request.get_data().decode()
     email, password = data.split('&')
-    if not AUTH.valid_login(email, password):
+    if not AUTH.valid_login(email.split('=')[1], password.split('=')[1]):
         abort(401)
     AUTH.create_session(email)
     return jsonify({"email": email, "message": "logged in"})
