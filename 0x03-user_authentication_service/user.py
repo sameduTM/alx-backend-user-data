@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """User model"""
-from sqlalchemy import Column, String, Integer, Sequence # type: ignore
+from sqlalchemy import Column, String, Integer, Sequence  # type: ignore
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()

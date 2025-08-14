@@ -2,9 +2,10 @@
 """Hash password module"""
 from db import DB
 from sqlalchemy.orm.exc import NoResultFound
-import uuid
+from typing import Union
 from user import User
 import bcrypt
+import uuid
 
 
 def _hash_password(password: str) -> bytes:
@@ -21,6 +22,7 @@ class Auth:
     """Auth class to interact with the authentication database"""
 
     def __init__(self) -> None:
+        """Initializes the Auth class"""
         self._db = DB()
 
     def register_user(self, email: str,
@@ -59,3 +61,15 @@ class Auth:
                 return session_id
         except Exception:
             return None  # type: ignore
+
+    def get_user_from_session_id(self, session_id: str) -> Union[User, None]:
+        """takes a single session_id string argument and returns the
+           corresponding User or None.
+        """
+        if session_id is None:
+            return None
+        try:
+            find_user = self._db.find_user_by(session_id=session_id)
+            return find_user
+        except Exception:
+            return None
