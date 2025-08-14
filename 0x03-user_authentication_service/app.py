@@ -63,7 +63,7 @@ def profile():
     abort(403)
 
 
-@app.route('/reset_password', methods=["POST"], strict_slashes=False)
+@app.route('/reset_password', methods=["GET"], strict_slashes=False)
 def reset_password():
     """reset password"""
     email = str(request.form.get('email'))
@@ -84,7 +84,7 @@ def update_password():
     new_password = str(request.form.get('new_password'))
     try:
         if AUTH.update_password(reset_token, new_password) is None:
-            return jsonify({"email": email, "message": "Password updated"})
+            return jsonify({"email": email, "reset-token": reset_token})
         abort(403)
     except ValueError:
         abort(403)
