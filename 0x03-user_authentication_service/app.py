@@ -17,9 +17,11 @@ def index():
 def register_user():
     """Register user"""
     data = request.get_data().decode('utf-8')
-    email, password = data.split('&')
+    credentials = data.split('&')
+    email = credentials[0].split('=')[1]
+    password = credentials[1].split('=')[1]
     try:
-        AUTH.register_user(email.split('=')[1], password.split('=')[1])
+        AUTH.register_user(email, password)
         return jsonify({"email": email, "message": "user created"})
     except Exception:
         return jsonify({"message": "email already registered"}), 400
