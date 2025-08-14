@@ -12,7 +12,7 @@ def _hash_password(password: str) -> bytes:
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt())
 
 
-def _generate_uuid(self) -> str:
+def _generate_uuid() -> str:
     """return a string representation of a new UUID"""
     return str(uuid.uuid4())
 
@@ -46,3 +46,16 @@ class Auth:
             return False
         except Exception:
             return False
+
+    def create_session(self, email: str) -> str:  # type: ignore
+        """takes an email string argument and returns the session ID as
+           a string.
+        """
+        try:
+            find_user = self._db.find_user_by(email=email)
+            if find_user:
+                session_id = _generate_uuid()
+                self._db.update_user(find_user.id, session_id=session_id)
+                return session_id
+        except Exception:
+            return None  # type: ignore
