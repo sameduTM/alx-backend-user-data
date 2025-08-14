@@ -76,7 +76,7 @@ def reset_password():
         abort(403)
 
 
-@app.route('/reset_password', methods=["PUT"], strict_slashes=False)
+@app.route('/reset_password', methods=["PUT", "POST"], strict_slashes=False)
 def update_password():
     """update password"""
     email = str(request.form.get('email'))
