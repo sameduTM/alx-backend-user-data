@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 """Basic flask app"""
 from auth import Auth
-from flask import Flask, jsonify, request, abort, make_response, redirect
+from flask import (Flask,
+                   jsonify,
+                   request, abort,
+                   make_response,
+                   redirect,
+                   url_for)
 
 app = Flask(__name__)
 
@@ -26,7 +31,7 @@ def register_user():
         return jsonify({"message": "email already registered"}), 400
 
 
-@app.route('/sessions', methods=["GET"], strict_slashes=False)
+@app.route('/sessions', methods=["POST"], strict_slashes=False)
 def login():
     """function to respond to the POST /sessions route."""
     email = request.form.get('email')
@@ -40,7 +45,7 @@ def login():
     return response
 
 
-@app.route('/sessions', methods=["DELETE", "POST"], strict_slashes=False)
+@app.route('/sessions', methods=["DELETE"], strict_slashes=False)
 def logout():
     """Log out"""
     session_id = str(request.cookies.get("session_id"))
@@ -48,7 +53,7 @@ def logout():
         user = AUTH.get_user_from_session_id(session_id)
         if user:
             AUTH.destroy_session(user.id)
-            return redirect('/', code=302)
+            return redirect(url_for("index"), code=302)
     abort(403)
 
 
