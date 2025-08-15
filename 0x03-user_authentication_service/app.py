@@ -40,7 +40,7 @@ def login():
         abort(401)
     session_id = AUTH.create_session(str(email))
     response = jsonify({"email": email, "message": "logged in"})
-    response.set_cookie(session_id)
+    response.set_cookie("session_id", session_id)
 
     return response
 
@@ -49,11 +49,10 @@ def login():
 def logout():
     """Log out"""
     session_id = str(request.cookies.get("session_id"))
-    if session_id:
-        user = AUTH.get_user_from_session_id(session_id)
-        if user:
-            AUTH.destroy_session(user.id)
-            return redirect(url_for("index"), code=302)
+    user = AUTH.get_user_from_session_id(session_id)
+    if user:
+        AUTH.destroy_session(user.id)
+        return redirect(url_for("index"), code=302)
     abort(403)
 
 

@@ -40,6 +40,7 @@ def log_in(email: str, password: str) -> str:
     assert response.status_code == 200
     for key in response.cookies.get_dict().keys():
         return key
+    return ''
 
 
 def profile_unlogged() -> None:
